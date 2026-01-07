@@ -1,0 +1,337 @@
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farewell Invitation</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(to right,#0f2027,#203a43,#2c5364);
+    color:white;
+    overflow-y:auto;
+}
+
+canvas{
+    position:fixed;
+    inset:0;
+    z-index:0;
+}
+
+/* Welcome */
+#welcome{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    position:relative;
+    z-index:2;
+}
+
+#welcome h1{
+    font-size:36px;
+    animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+    from{ text-shadow:0 0 10px #ffd700; }
+    to{ text-shadow:0 0 25px #ffd700; }
+}
+
+/* Open Farewell Button */
+.open-btn{
+    margin-top:25px;
+    background:#ffd700;
+    color:#000;
+    font-size:18px;
+    padding:14px 50px;
+    border:none;
+    border-radius:50px;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* Music Button */
+.music-btn{
+    position:fixed;
+    top:15px;
+    right:15px;
+    background:rgba(255,255,255,0.2);
+    border:none;
+    color:white;
+    padding:10px 16px;
+    border-radius:25px;
+    cursor:pointer;
+    z-index:3;
+}
+
+/* Content */
+#content{
+    display:none;
+    padding:25px;
+    text-align:center;
+    position:relative;
+    z-index:2;
+}
+
+.card{
+    background:rgba(255,255,255,0.12);
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+
+video{
+    width:100%;
+    border-radius:12px;
+}
+
+/* Sweet Memories */
+#memoryText{
+    font-style:italic;
+    font-size:18px;
+    color:#ffd700;   /* 💛 YELLOW */
+    opacity:0;
+    transition:opacity 1s ease;
+}
+
+/* Final Text */
+#finalText{
+    display:none;
+    font-size:28px;
+    color:#ffd700;
+    margin-top:30px;
+}
+</style>
+</head>
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<!-- 🎵 Sounds -->
+<audio id="bgMusic" loop>
+  <source src="https://files.catbox.moe/g5js7g.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="fireSound">
+  <source src="https://files.catbox.moe/627wsx.mp3" type="audio/mpeg">
+</audio>
+
+<button class="music-btn" onclick="toggleMusic()">🔊 Music On</button>
+
+<!-- Welcome Screen -->
+<div id="welcome">
+    <h1>🎓 Farewell 2026</h1>
+    <p>A small surprise from your juniors 💙</p>
+    <button class="open-btn" onclick="openFarewell()">Open Farewell</button>
+</div>
+
+<!-- Main Content -->
+<div id="content">
+
+    <div class="card">
+        <h2>Dear Seniors ❤️</h2>
+        <p id="typingText"></p>
+    </div>
+
+    <div class="card">
+        <h3>💭 Short Quotes </h3>
+        <p id="memoryText"></p>
+    </div>
+
+    <div class="card">
+        <h3>📅 Event Details</h3>
+        <p>
+            <b>Date:</b> 10th January 2026<br>
+            <b>Time:</b> 9:00 AM onwards<br>
+            <b>Venue:</b> School Auditorium
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>🎥 A Special Video</h3>
+        <video controls>
+            <source src="https://files.catbox.moe/0aascm.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div id="finalText">
+        💖 THANK YOU SENIORS 💫<br>
+        Once a senior, forever in our hearts
+    </div>
+
+</div>
+
+<script>
+/* ---------------- TYPING ---------------- */
+const message =
+"You were not just our seniors, but our inspiration and strength. " +
+"Your guidance, memories, and smiles will always stay with us.";
+
+let t = 0;
+const typingText = document.getElementById("typingText");
+
+function typeEffect(){
+    if(t < message.length){
+        typingText.innerHTML += message.charAt(t++);
+        setTimeout(typeEffect, 80);
+    }else{
+        setTimeout(startFireworks, 1000);
+    }
+}
+
+/* ---------------- MUSIC ---------------- */
+let musicOn = true;
+const bgMusic = document.getElementById("bgMusic");
+const fireSound = document.getElementById("fireSound");
+const musicBtn = document.querySelector(".music-btn");
+
+function toggleMusic(){
+    if(musicOn){
+        bgMusic.pause();
+        musicBtn.innerText = "🔇 Music Off";
+    }else{
+        bgMusic.play();
+        musicBtn.innerText = "🔊 Music On";
+    }
+    musicOn = !musicOn;
+}
+
+/* ---------------- SWEET MEMORIES ---------------- */
+const memories = [
+ "From morning assemblies to last bench laughs.",
+ "Your guidance made our journey brighter.",
+ "Lessons learned beyond classrooms.",
+ "Not goodbye, just see you later."
+];
+
+let mi = 0;
+const memoryText = document.getElementById("memoryText");
+
+function showMemory(){
+    memoryText.style.opacity = 0;
+    setTimeout(()=>{
+        memoryText.innerText = memories[mi];
+        memoryText.style.opacity = 1;
+        mi = (mi + 1) % memories.length;
+    },600);
+}
+setInterval(showMemory, 3000);
+
+/* ---------------- FIREWORKS WITH NAMES ---------------- */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+const names = [
+ "Shristi","Gungun","Rahul","Yabesh","Prajwal","Sonu",
+ "Salina","Bhawana","Riya","Tripty","Suhana","Dipika",
+ "Deepshika","Rini"
+];
+
+let rockets = [], particles = [];
+let showName = "", nameAlpha = 0, nameColor = "#fff";
+
+function Rocket(name){
+    this.x = Math.random() * canvas.width;
+    this.y = canvas.height;
+    this.vy = 6;
+    this.targetY = canvas.height / 3;
+    this.name = name;
+    this.color = `hsl(${Math.random()*360},100%,80%)`;
+}
+
+function Particle(x,y,c){
+    this.x = x; this.y = y;
+    this.vx = (Math.random()-0.5)*7;
+    this.vy = (Math.random()-0.5)*7;
+    this.life = 1;
+    this.color = c;
+}
+
+function explode(x,y,c,name){
+    fireSound.pause();
+    fireSound.currentTime = 0;
+    fireSound.play().catch(()=>{});
+
+    showName = name;
+    nameColor = c;
+    nameAlpha = 1;
+
+    for(let i=0;i<90;i++){
+        particles.push(new Particle(x,y,c));
+    }
+}
+
+function startFireworks(){
+    let idx = 0;
+    const interval = setInterval(()=>{
+        if(idx >= names.length){
+            clearInterval(interval);
+            setTimeout(()=>finalText.style.display="block",2500);
+            return;
+        }
+        rockets.push(new Rocket(names[idx++]));
+    }, 2200);
+    animate();
+}
+
+function animate(){
+    ctx.fillStyle = "rgba(0,0,0,0.25)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    rockets.forEach((r,i)=>{
+        ctx.fillStyle = r.color;
+        ctx.fillRect(r.x,r.y,3,10);
+        r.y -= r.vy;
+        if(r.y <= r.targetY){
+            explode(r.x,r.y,r.color,r.name);
+            rockets.splice(i,1);
+        }
+    });
+
+    particles.forEach((p,i)=>{
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,2,0,Math.PI*2);
+        ctx.fill();
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.02;
+        if(p.life <= 0) particles.splice(i,1);
+    });
+
+    if(nameAlpha > 0){
+        ctx.globalAlpha = nameAlpha;
+        ctx.font = "bold 44px Segoe UI";
+        ctx.fillStyle = nameColor;
+        ctx.textAlign = "center";
+        ctx.shadowColor = nameColor;
+        ctx.shadowBlur = 25;
+        ctx.fillText(showName, canvas.width/2, canvas.height/3);
+        nameAlpha -= 0.01;
+        ctx.shadowBlur = 0;
+    }
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(animate);
+}
+
+function openFarewell(){
+    welcome.style.display = "none";
+    content.style.display = "block";
+
+    /* 🔑 unlock audio on user click */
+    bgMusic.play().catch(()=>{});
+    fireSound.play().then(()=>fireSound.pause()).catch(()=>{});
+
+    showMemory();
+    typeEffect();
+}
+</script>
+
+</body>
